@@ -2,12 +2,6 @@ source ~/.config/nvim/plugins.vim
 
 " Section General {{{
 
-" Abbreviations
-abbr funciton function
-abbr teh the
-abbr tempalte template
-abbr fitler filter
-
 set nocompatible            " not compatible with vi
 set autoread                " detect when a file is changed
 
@@ -31,11 +25,10 @@ highlight SpecialKey ctermbg=none ctermfg=8
 highlight NonText ctermbg=none ctermfg=8
 
 " make comments and HTML attributes italic
-highlight Comment cterm=italic
-highlight htmlArg cterm=italic
+" highlight Comment cterm=italic
+" highlight htmlArg cterm=italic
 
 set number                  " show line numbers
-" set relativenumber          " show relative line numbers
 
 set wrap                    " turn on line wrapping
 set wrapmargin=8            " wrap lines when coming within n characters from side
@@ -101,13 +94,12 @@ set mat=2                   " how many tenths of a second to blink
 
 " error bells
 set noerrorbells
-set visualbell
+set novisualbell
 set t_vb=
-set tm=500
+set timeoutlen=350     " Time to wait for a command (after leader for example)
 
 if has('mouse')
-	set mouse=a
-	" set ttymouse=xterm2
+  set mouse=a
 endif
 
 " }}}
@@ -118,13 +110,17 @@ endif
 let mapleader = ','
 
 " remap esc
-inoremap jk <esc>
+inoremap jw <Esc>
 
 " wipout buffer
 nmap <silent> <leader>b :bw<cr>
 
 " shortcut to save
 nmap <leader>, :w<cr>
+
+" Use ; for : in normal and visual mode, less keystrokes
+nnoremap ; :
+vnoremap ; :
 
 " set paste toggle
 set pastetoggle=<leader>v
@@ -164,12 +160,19 @@ nmap <leader>. <c-^>
 " enable . command in visual mode
 vnoremap . :normal .<cr>
 
-map <silent> <C-h> :call functions#WinMove('h')<cr>
-map <silent> <C-j> :call functions#WinMove('j')<cr>
-map <silent> <C-k> :call functions#WinMove('k')<cr>
-map <silent> <C-l> :call functions#WinMove('l')<cr>
+nmap <silent> <C-h> :call functions#WinMove('h')<cr>
+nmap <silent> <C-j> :call functions#WinMove('j')<cr>
+nmap <silent> <C-k> :call functions#WinMove('k')<cr>
+nmap <silent> <C-l> :call functions#WinMove('l')<cr>
 
-map <leader>wc :wincmd q<cr>
+nmap <leader>wc :wincmd q<cr>
+" Equal Size Windows
+nmap <silent> <Leader>w= :wincmd =<CR>
+
+" Window Splitting
+nmap <silent> <Leader>s :split<CR>
+nmap <silent> <Leader>v :vsplit<CR>
+nmap <silent> <Leader>c :close<CR>
 
 " toggle cursor line
 nnoremap <leader>i :set cursorline!<cr>
@@ -197,8 +200,6 @@ let g:silent_custom_command = 0
 nmap \t :set ts=4 sts=4 sw=4 noet<cr>
 nmap \s :set ts=4 sts=4 sw=4 et<cr>
 
-nmap <leader>w :setf textile<cr> :Goyo<cr>
-
 nnoremap <silent> <leader>u :call functions#HtmlUnEscape()<cr>
 
 " }}}
@@ -219,10 +220,20 @@ augroup configgroup
     " when there are multiple windows open
     autocmd FileType qf wincmd J
 
+    " Help make nice commit messages
+    autocmd FileType gitcommit highlight OverLength ctermbg=darkgrey guibg=#592929
+    autocmd FileType gitcommit match OverLength /\%72v.*/
+    autocmd FileType gitcommit setl tw=72 fo=cq wm=0
+
     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+    autocmd BufRead,BufNewFile *.install setfiletype php
+    autocmd BufRead,BufNewFile *.test setfiletype php
     let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript', 'stylus', 'html']
 
     " autocmd! BufEnter * call functions#ApplyLocalSettings(expand('<afile>:p:h'))
+
+    " Auto-clean fugitive buffers
+    autocmd BufReadPost fugitive://* set bufhidden=delete
 
     autocmd BufNewFile,BufRead,BufWrite *.md syntax match Comment /\%^---\_.\{-}---$/
 
@@ -285,20 +296,20 @@ nmap <leader>m :MarkedOpen!<cr>
 nmap <leader>mq :MarkedQuit<cr>
 nmap <leader>* *<c-o>:%s///gn<cr>
 
-let g:neomake_javascript_jshint_maker = {
-    \ 'args': ['--verbose'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
-\ }
-
-let g:neomake_typescript_tsc_maker = {
-    \ 'args': ['-m', 'commonjs', '--noEmit' ],
-    \ 'append_file': 0,
-    \ 'errorformat':
-        \ '%E%f %#(%l\,%c): error %m,' .
-        \ '%E%f %#(%l\,%c): %m,' .
-        \ '%Eerror %m,' .
-        \ '%C%\s%\+%m'
-\ }
+" let g:neomake_javascript_jshint_maker = {
+"     \ 'args': ['--verbose'],
+"     \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+" \ }
+" 
+" let g:neomake_typescript_tsc_maker = {
+"     \ 'args': ['-m', 'commonjs', '--noEmit' ],
+"     \ 'append_file': 0,
+"     \ 'errorformat':
+"         \ '%E%f %#(%l\,%c): error %m,' .
+"         \ '%E%f %#(%l\,%c): %m,' .
+"         \ '%Eerror %m,' .
+"         \ '%C%\s%\+%m'
+" \ }
 
 " airline options
 let g:airline_powerline_fonts=1
@@ -310,10 +321,34 @@ let g:airline#extensions#tabline#tab_min_count = 2 " only show tabline if tabs a
 let g:airline#extensions#tabline#show_buffers = 0 " do not show open buffers in tabline
 let g:airline#extensions#tabline#show_splits = 0
 
+" Dash
+nmap <silent> <leader>d <Plug>DashSearch
+let g:dash_map = {
+  \ 'module' : ['drupal', 'php'],
+  \ 'inc' : ['drupal', 'php'],
+  \ 'install' : ['drupal', 'php'],
+  \ 'profile' : ['drupal', 'php']
+  \ }
+
+" ack.vim
+let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
 
+" Quick spelling fix (first item in z= list)
+function! QuickSpellingFix()
+  if &spell
+    normal 1z=
+  else
+    " Enable spelling mode and do the correction
+    set spell
+    normal 1z=
+    set nospell
+  endif
+endfunction
+command! QuickSpellingFix call QuickSpellingFix()
+nmap <silent> <Leader>z :QuickSpellingFix<CR>
 
 let g:SuperTabCrMapping = 0
 

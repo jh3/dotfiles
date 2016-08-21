@@ -1,6 +1,6 @@
 set -g default-command "login-shell"
 # tmux display things in 256 colors
-set -g default-terminal "tmux-256color-italic"
+set -g default-terminal "screen-256color"
 
 set -g history-limit 20000
 
@@ -9,11 +9,11 @@ set -g renumber-windows on
 
 # unbind default prefix and set it to Ctrl+a
 unbind C-b
-set -g prefix C-a
-bind C-a send-prefix
+set -g prefix C-q
+bind C-q send-prefix
 
 # for nested tmux sessions
-bind-key a send-prefix
+#bind-key a send-prefix
 
 # Activity Monitoring
 setw -g monitor-activity off
@@ -48,46 +48,32 @@ set-option -g set-titles-string "#T - #W"
 #### Key Bindings ####
 ######################
 
-# reload config file
-bind r source-file ~/.tmux.conf \; display "Config Reloaded!"
-
 # quickly open a new window
 bind N new-window
 
 # split window and fix path for tmux 1.9
-bind | split-window -h -c "#{pane_current_path}"
-bind - split-window -v -c "#{pane_current_path}"
+bind-key C-v split-window -h
+bind-key C-s split-window -v
+bind-key _ split-window -v -p 25 # Makes a horizontal 'testing' pane
+bind-key / split-window -h -p 33 # Makes a vertical 'testing' pane
 
 # synchronize all panes in a window
 bind y setw synchronize-panes
 
 # pane movement shortcuts
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+bind C-h select-pane -L
+bind C-j select-pane -D
+bind C-k select-pane -U
+bind C-l select-pane -R
 
-bind -r C-h select-window -t :-
-bind -r C-l select-window -t :+
+bind-key -r C-n select-window -t :+
+bind-key -r C-p select-window -t :-
 
 # Resize pane shortcuts
 bind -r H resize-pane -L 10
 bind -r J resize-pane -D 10
 bind -r K resize-pane -U 10
 bind -r L resize-pane -R 10
-
-# enable mouse support for switching panes/windows
-setw -g mouse on
-# set-option -g -q mouse on
-
-bind-key -T root PPage if-shell -F "#{alternate_on}" "send-keys PPage" "copy-mode -e; send-keys PPage"
-bind-key -t vi-copy PPage page-up
-bind-key -t vi-copy NPage page-down
-
-bind -T root WheelUpPane if-shell -F -t = "#{alternate_on}" "select-pane -t =; send-keys -M" "select-pane -t =; copy-mode -e; send-keys -M"
-bind -T root WheelDownPane if-shell -F -t = "#{alternate_on}" "select-pane -t =; send-keys -M" "select-pane -t =; send-keys -M"
-bind-key -t vi-copy WheelUpPane halfpage-up
-bind-key -t vi-copy WheelDownPane halfpage-down
 
 # maximizing and restoring windows
 unbind Up
@@ -98,16 +84,30 @@ bind Down last-window \; swap-pane -s fullscreen.1 \; kill-window -t fullscreen
 # set vi mode for copy mode
 setw -g mode-keys vi
 # more settings to make copy-mode more vim-like
-unbind [
-bind Escape copy-mode
-unbind p
-bind p paste-buffer
-bind -t vi-copy 'v' begin-selection
-bind -t vi-copy 'y' copy-selection
+#unbind [
+#bind Escape copy-mode
+#unbind p
+#bind p paste-buffer
+#bind -t vi-copy 'v' begin-selection
+#bind -t vi-copy 'y' copy-selection
+
+
+# Make pbcopy and pbpaste work
+# See https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard
+set-option -g default-command "reattach-to-user-namespace -l zsh"
 
 # Buffers to/from Mac clipboard, yay tmux book from pragprog
 bind C-c run "tmux save-buffer - | reattach-to-user-namespace pbcopy"
-bind C-v run "tmux set-buffer $(reattach-to-user-namespace pbpaste); tmux paste-buffer"
+#bind C-v run "tmux set-buffer $(reattach-to-user-namespace pbpaste); tmux paste-buffer"
+set-option -g default-command "/bin/bash -c 'which reattach-to-user-namespace >/dev/null && exec reattach-to-user-namespace $SHELL -l || exec $SHELL -l'"
+
+# Copy and paste from and to tmux
+#bind C-c run "tmux save-buffer - | reattach-to-user-namespace pbcopy"
+# bind C-v run "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
+#set-option -g default-command "/bin/bash -c 'which reattach-to-user-namespace >/dev/null && exec reattach-to-user-namespace $SHELL -l || exec $SHELL -l'"
+
+# reload config file
+bind r source-file ~/.tmux.conf \; display "Config Reloaded!"
 
 ##############################
 ### Color & Style Settings ###

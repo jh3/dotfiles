@@ -1,5 +1,8 @@
 export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh
+# See https://github.com/neovim/neovim/issues/2048
+# and https://github.com/neovim/neovim/issues/2048#issuecomment-187227417
+export TERMINFO="$HOME/.terminfo"
 
 # display how long all tasks over 10 seconds take
 export REPORTTIME=10
@@ -8,8 +11,8 @@ export REPORTTIME=10
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
-if [[ -d ~/code ]]; then
-    export CODE_DIR=~/code
+if [[ -d ~/Development ]]; then
+    export CODE_DIR=~/Development
 fi
 
 # source all .zsh files inside of the zsh/ directory
@@ -18,7 +21,6 @@ for config ($ZSH/**/*.zsh) source $config
 if [[ -a ~/.localrc ]]; then
     source ~/.localrc
 fi
-
 
 # initialize autocomplete
 autoload -U compinit add-zsh-hook
@@ -43,39 +45,16 @@ if [[ -d ~/bin ]]; then
     export PATH=~/bin:$PATH
 fi
 
-[ -z "$TMUX" ] && export TERM=xterm-256color-italic
+#[ -z "$TMUX" ] && export TERM=xterm-256color-italic
 
 # install rbenv
 if hash rbenv 2>/dev/null; then
     eval "$(rbenv init -)"
 fi
 
-if [[ -d ~/.rvm ]]; then
-    PATH=$HOME/.rvm/bin:$PATH # Add RVM to PATH for scripting
-    source ~/.rvm/scripts/rvm
-fi
-
-# alias git to hub
-if hash hub 2>/dev/null; then
-    eval "$(hub alias -s)"
-fi
-
-# source nvm
-export NVM_DIR=~/.nvm
-
-load-nvmrc() {
-    if [[ -f .nvmrc && -r .nvmrc ]]; then
-        nvm use
-    fi
-}
-add-zsh-hook chpwd load-nvmrc
-
 if hash brew 2>/dev/null; then
-    source $(brew --prefix nvm)/nvm.sh
     source `brew --prefix`/etc/profile.d/z.sh
-    # when sourcing, check and ensure that the correct Node version is set
-    load-nvmrc
-
+    source `brew --prefix`/etc/profile.d/autojump.sh
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -85,6 +64,7 @@ if [ -z ${DOTFILES_LOADED+x} ]; then
     source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     # install zsh autosuggestions
     source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    bindkey '^ ' autosuggest-accept
 fi
 
 DOTFILES_LOADED=1

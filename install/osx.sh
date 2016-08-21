@@ -21,8 +21,8 @@ chflags nohidden ~/Library
 # echo "disable resume system wide"
 # defaults write NSGlobalDomainNSQuitAlwaysKeepWindows -bool false
 
-echo "Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)"
-defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+# echo "Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)"
+# defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 echo "Enable subpixel font rendering on non-Apple LCDs"
 defaults write NSGlobalDomain AppleFontSmoothing -int 2
@@ -142,8 +142,8 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 #defaults write com.apple.screensaver askForPassword -int 1
 #defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-echo "Enable tap to click (Trackpad)"
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+#echo "Enable tap to click (Trackpad)"
+#defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
 #echo "Map bottom right Trackpad corner to right-click"
 #defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
