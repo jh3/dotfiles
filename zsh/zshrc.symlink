@@ -45,6 +45,10 @@ if [[ -d ~/bin ]]; then
     export PATH=~/bin:$PATH
 fi
 
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+
 #[ -z "$TMUX" ] && export TERM=xterm-256color-italic
 
 # install rbenv
@@ -64,7 +68,6 @@ if [ -z ${DOTFILES_LOADED+x} ]; then
     source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     # install zsh autosuggestions
     source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    bindkey '^ ' autosuggest-accept
 fi
 
 DOTFILES_LOADED=1

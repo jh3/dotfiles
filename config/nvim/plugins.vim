@@ -62,4 +62,12 @@ Plug 'elzr/vim-json', { 'for': 'json' } " JSON support
 Plug 'Shougo/vimproc.vim', { 'do': 'make' } " interactive command execution in vim
 Plug 'fatih/vim-go', { 'for': 'go' } " go support
 
+" php stuff
+Plug 'joonty/vdebug'
+Plug 'arnaud-lb/vim-php-namespace'
+Plug 'StanAngeloff/php.vim', { 'for': 'php' } " Up-to-date PHP syntax file (5.3–5.6 support)
+Plug 'tobyS/vmustache', { 'for': 'php' } " Needed by pdv
+Plug 'tobyS/pdv', { 'for': 'php' } " PHP doc
+Plug 'stephpy/vim-php-cs-fixer', { 'for': 'php' }
+
 call plug#end()

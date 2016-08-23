@@ -9,6 +9,8 @@ else # OS X `ls`
 fi
 
 alias vim="nvim"
+alias vd="vimdiff"
+alias v="vim"
 
 # Filesystem aliases
 alias ..='cd ..'
@@ -25,6 +27,14 @@ alias rmf="rm -rf"
 alias q="exit"
 alias a="ls -Al"
 alias c="clear"
+alias s="cd .."
+alias t="tig"
+
+todate() {
+  date -d @$1 --rfc-3339=seconds
+}
+alias td=todate
+alias ag="ag --path-to-agignore=~/.agignore"
 
 # Helpers
 alias grep='grep --color=auto'

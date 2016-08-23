@@ -11,6 +11,13 @@ set textwidth=120
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 
+if has('persistent_undo')
+  set undofile                " So is persistent undo ...
+  set undolevels=1000         " Maximum number of changes that can be undone
+  set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+  set undodir=~/.vimundo/
+endif
+
 " }}}
 
 " Section User Interface {{{
@@ -40,7 +47,7 @@ set smartindent
 
 " toggle invisible characters
 set list
-set listchars=tab:→\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
+set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
 set showbreak=↪
 
 " highlight conflicts
@@ -160,6 +167,9 @@ nmap <leader>. <c-^>
 " enable . command in visual mode
 vnoremap . :normal .<cr>
 
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+nnoremap Y y$
+
 nmap <silent> <C-h> :call functions#WinMove('h')<cr>
 nmap <silent> <C-j> :call functions#WinMove('j')<cr>
 nmap <silent> <C-k> :call functions#WinMove('k')<cr>
@@ -263,6 +273,9 @@ nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
+" Ctags
+set tags=./tags;/,~/.vimtags
+
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -291,16 +304,20 @@ nmap <silent> <leader>gs :Gstatus<cr>
 nmap <leader>ge :Gedit<cr>
 nmap <silent><leader>gr :Gread<cr>
 nmap <silent><leader>gb :Gblame<cr>
-
+nmap <silent> <leader>gd :Gdiff<CR>
+nmap <silent> <leader>gc :Gcommit<CR>
+nmap <Leader>gx :wincmd h<CR>:q<CR> " Exit a diff by closing the diff window
 nmap <leader>m :MarkedOpen!<cr>
 nmap <leader>mq :MarkedQuit<cr>
 nmap <leader>* *<c-o>:%s///gn<cr>
+" Mnemonic _i_nteractive
+nnoremap <silent> <leader>gi :Git add -p %<CR>
 
 " let g:neomake_javascript_jshint_maker = {
 "     \ 'args': ['--verbose'],
 "     \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
 " \ }
-" 
+"
 " let g:neomake_typescript_tsc_maker = {
 "     \ 'args': ['-m', 'commonjs', '--noEmit' ],
 "     \ 'append_file': 0,
@@ -330,10 +347,41 @@ let g:dash_map = {
   \ 'profile' : ['drupal', 'php']
   \ }
 
+" vdebug
+let g:vdebug_keymap = {
+\    "run" : "<Leader>/",
+\    "run_to_cursor" : "<Down>",
+\    "step_over" : "<Up>",
+\    "step_into" : "<Left>",
+\    "step_out" : "<Right>",
+\    "close" : "q",
+\    "detach" : "x",
+\    "set_breakpoint" : "<Leader>p",
+\    "eval_visual" : "<Leader>e"
+\}
+
+let g:vdebug_options= {
+\    "port" : 17500,
+\    "server" : '127.0.0.1',
+\    "timeout" : 20,
+\    "on_close" : 'detach',
+\    "break_on_open" : 0,
+\    "ide_key" : '',
+\    "path_maps" : {},
+\    "debug_window_level" : 0,
+\    "debug_file_level" : 0,
+\    "debug_file" : "",
+\    "watch_window_style" : 'expanded',
+\    "marker_default" : '⬦',
+\    "marker_closed_tree" : '▸',
+\    "marker_open_tree" : '▾'
+\}
+
 " ack.vim
 let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " don't hide quotes in json files
+nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
 let g:vim_json_syntax_conceal = 0
 
 " Quick spelling fix (first item in z= list)
@@ -351,6 +399,10 @@ command! QuickSpellingFix call QuickSpellingFix()
 nmap <silent> <Leader>z :QuickSpellingFix<CR>
 
 let g:SuperTabCrMapping = 0
+
+" Profiling vim
+nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
+nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 
 " }}}
 
