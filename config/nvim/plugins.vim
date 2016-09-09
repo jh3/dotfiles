@@ -6,6 +6,7 @@ Plug 'dracula/vim'
 " utilities
 " Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder, mapped to <leader>t
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim' " fuzzy file finder and so much more
+Plug 'szw/vim-tags' " ctags generator
 Plug 'mileszs/ack.vim' " search inside files using ack. Same as command line ack utility, but use :Ack
 Plug 'jiangmiao/auto-pairs' " automatic closing of quotes, parenthesis, brackets, etc.
 Plug 'tpope/vim-commentary' " comment stuff out
@@ -43,18 +44,14 @@ Plug 'othree/html5.vim', { 'for': 'html' } " html5 support
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' } " JavaScript indent support
 Plug 'moll/vim-node', { 'for': 'javascript' } " node support
 Plug 'othree/yajs.vim', { 'for': 'javascript' } " JavaScript syntax plugin
-Plug 'mxw/vim-jsx', { 'for': 'jsx' } " JSX support
-Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' } " ES6 and beyond syntax
 
 " styles
 Plug 'wavded/vim-stylus', { 'for': ['stylus', 'markdown'] } " markdown support
-Plug 'groenewege/vim-less', { 'for': 'less' } " less support
 Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] } " set the background of hex color values to the color
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' } " CSS3 syntax support
 Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' } " sass scss syntax support
 
 " markdown
-Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' } " Open markdown files in Marked.app - mapped to <leader>m
 Plug 'tpope/vim-markdown', { 'for': 'markdown' } " markdown support
 
 " language-specific plugins
@@ -66,8 +63,5 @@ Plug 'fatih/vim-go', { 'for': 'go' } " go support
 Plug 'joonty/vdebug'
 Plug 'arnaud-lb/vim-php-namespace'
 Plug 'StanAngeloff/php.vim', { 'for': 'php' } " Up-to-date PHP syntax file (5.3–5.6 support)
-Plug 'tobyS/vmustache', { 'for': 'php' } " Needed by pdv
-Plug 'tobyS/pdv', { 'for': 'php' } " PHP doc
-Plug 'stephpy/vim-php-cs-fixer', { 'for': 'php' }
 
 call plug#end()

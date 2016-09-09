@@ -6,7 +6,7 @@ set nocompatible            " not compatible with vi
 set autoread                " detect when a file is changed
 
 set history=1000            " change history to 1000
-set textwidth=120
+set textwidth=80
 
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -47,7 +47,7 @@ set smartindent
 
 " toggle invisible characters
 set list
-set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
+set listchars=trail:•,extends:#,nbsp:. " Highlight problematic whitespace
 set showbreak=↪
 
 " highlight conflicts
@@ -57,7 +57,7 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 set backspace=indent,eol,start
 
 " Tab control
-set noexpandtab             " insert tabs rather than spaces for <Tab>
+set expandtab               " insert spaces rather than tabs for <Tab>
 set smarttab                " tab respects 'tabstop', 'shiftwidth', and 'softtabstop'
 set tabstop=4               " the visible width of tabs
 set softtabstop=4           " edit as if the tabs are 4 characters wide
@@ -75,7 +75,7 @@ set clipboard=unnamed
 
 set ttyfast                 " faster redrawing
 set diffopt+=vertical
-set laststatus=2            " show the satus line all the time
+set laststatus=2            " show the status line all the time
 set so=7                    " set 7 lines to the cursors - when moving vertical
 set wildmenu                " enhanced command line completion
 set hidden                  " current buffer can be put into background
@@ -144,14 +144,13 @@ map <leader>eg :e! ~/.gitconfig<cr>
 noremap <space> :set hlsearch! hlsearch?<cr>
 
 " activate spell-checking alternatives
-nmap ;s :set invspell spelllang=en<cr>
+"nmap ;s :set invspell spelllang=en<cr>
 
 " markdown to html
 nmap <leader>md :%!markdown --html4tags <cr>
 
 " remove extra whitespace
-nmap <leader><space> :%s/\s\+$<cr>
-
+"nmap <leader><space> :%s/\s\+$<cr>
 
 nmap <leader>l :set list!<cr>
 
@@ -220,7 +219,9 @@ augroup configgroup
     autocmd!
 
     " automatically resize panes on resize
-    autocmd VimResized * exe 'normal! \<c-w>='
+    "autocmd VimResized * exe 'normal! \<c-w>='
+    " Automatically rebalance windows on vim resize
+    autocmd VimResized * :wincmd =
     autocmd BufWritePost .vimrc,.vimrc.local,init.vim source %
     autocmd BufWritePost .vimrc.local source %
     " save all files on focus lost, ignoring warnings about untitled buffers
@@ -250,6 +251,13 @@ augroup configgroup
     autocmd! BufWritePost * Neomake
 augroup END
 
+" When editing a file, always jump to the last cursor position.
+" This must be after the uncompress commands.
+autocmd BufReadPost *
+  \ if line("'\"") > 1 && line ("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif
+
 " }}}
 
 " Section Plugins {{{
@@ -275,6 +283,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 " Ctags
 set tags=./tags;/,~/.vimtags
+let g:vim_tags_use_vim_dispatch = 1
 
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
@@ -296,7 +305,6 @@ command! FZFMru call fzf#run({
 \  'sink':    'e',
 \  'options': '-m -x +s',
 \  'down':    '40%'})
-
 
 " Fugitive Shortcuts
 """""""""""""""""""""""""""""""""""""
@@ -349,18 +357,18 @@ let g:dash_map = {
 
 " vdebug
 let g:vdebug_keymap = {
-\    "run" : "<Leader>/",
+\    "run" : "<leader>/",
 \    "run_to_cursor" : "<Down>",
 \    "step_over" : "<Up>",
 \    "step_into" : "<Left>",
 \    "step_out" : "<Right>",
 \    "close" : "q",
 \    "detach" : "x",
-\    "set_breakpoint" : "<Leader>p",
-\    "eval_visual" : "<Leader>e"
+\    "set_breakpoint" : "<leader>p",
+\    "eval_visual" : "<leader>e",
 \}
 
-let g:vdebug_options= {
+let g:vdebug_options = {
 \    "port" : 17500,
 \    "server" : '127.0.0.1',
 \    "timeout" : 20,
@@ -374,7 +382,7 @@ let g:vdebug_options= {
 \    "watch_window_style" : 'expanded',
 \    "marker_default" : '⬦',
 \    "marker_closed_tree" : '▸',
-\    "marker_open_tree" : '▾'
+\    "marker_open_tree" : '▾',
 \}
 
 " ack.vim
