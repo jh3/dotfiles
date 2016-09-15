@@ -2,6 +2,12 @@
 export ZSH=$HOME/.oh-my-zsh
 export DOTFILES=$HOME/.dotfiles
 
+# Without this, <C-h> does not work in neovim...
+# See https://github.com/neovim/neovim/issues/2048
+# and https://github.com/neovim/neovim/issues/2048#issuecomment-187227417
+export TERMINFO="$HOME/.terminfo"
+[[ -e ~/.terminfo ]] && export TERMINFO_DIRS=~/.terminfo:/usr/share/terminfo
+
 ZSH_THEME="pure"
 
 # Uncomment the following line to use case-sensitive completion.
