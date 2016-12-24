@@ -52,10 +52,10 @@ set-option -g set-titles-string "#T - #W"
 bind N new-window
 
 # split window and fix path for tmux 1.9
-bind-key C-v split-window -h
-bind-key C-s split-window -v
-bind-key _ split-window -v -p 25 # Makes a horizontal 'testing' pane
-bind-key / split-window -h -p 33 # Makes a vertical 'testing' pane
+bind-key C-v split-window -h -c "#{pane_current_path}"
+bind-key C-s split-window -v -c "#{pane_current_path}"
+bind-key _ split-window -v -p 25 -c "#{pane_current_path}" # Makes a horizontal 'testing' pane
+bind-key / split-window -h -p 33 -c "#{pane_current_path}" # Makes a vertical 'testing' pane
 
 # synchronize all panes in a window
 bind y setw synchronize-panes
